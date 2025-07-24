@@ -11,6 +11,13 @@ def parser_args():
     parser = argparse.ArgumentParser(description="Лог-репорт")
     parser.add_argument(
         "logfile",
-        help="Путь к JSON-файлу с логами",
+        nargs="+",
+        help="Один или несколько путей к JSON-файлам с логами",
+    )
+    parser.add_argument(
+        "--report",
+        choices=["average"],
+        required=True,
+        help="Тип отчета (например: average)",
     )
     return parser.parse_args()
