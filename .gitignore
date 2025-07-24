@@ -7,3 +7,14 @@ poetry.lock
 
 #pre-commit config
 .pre-commit-config.yaml
+
+#packaging
+__pycache__/
+*.pyc
+
+#test
+.cache
+.coverage
+htmlcov/
+.tox/
+.pytest_cache
