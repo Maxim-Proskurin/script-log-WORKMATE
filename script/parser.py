@@ -16,8 +16,9 @@ def parser_args():
     )
     parser.add_argument(
         "--report",
-        choices=["average"],
+        choices=["average", "useragent"],
         required=True,
         help="Тип отчета (например: average)",
     )
+
     return parser.parse_args()

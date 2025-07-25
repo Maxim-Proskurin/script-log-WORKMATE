@@ -11,15 +11,15 @@ class Report:
     def __init__(self, logs: List[Dict[str, Any]]) -> None:
         self.logs = logs
 
-        def generate(self) -> str:
-            """
-            Генерирует отчет.
-            Retutns:
-                str: Отчет в виде строки(например таблица).
-            """
-            raise NotImplementedError(
-                "Метод generate() должен быть реализован в подклассе."
-            )
+    def generate(self) -> str:
+        """
+        Генерирует отчет.
+        Retutns:
+            str: Отчет в виде строки(например таблица).
+        """
+        raise NotImplementedError(
+            "Метод generate() должен быть реализован в подклассе.",
+        )
 
 
 class AverageResponseReport(Report):
@@ -53,8 +53,17 @@ class AverageResponseReport(Report):
 
         return tabulate(
             table,
-            headers=["№", "handler", "total", "avg_response_time"],
-            tablefmt="github",
+            headers=[
+                "№",
+                "handler",
+                "total",
+                "avg_response_time",
+            ],
+            tablefmt="grid",
+            showindex=False,
+            stralign="left",
+            numalign="right",
+            disable_numparse=True,
         )
 
 
@@ -63,9 +72,31 @@ class UserAgentReport(Report):
     Отчет по User-Agent.
     """
 
-    def generate(self) -> str:
-        agents = set(
-            log["http_user_agent"] for log in self.logs if "http_user_agent" in log
+    def generate(self):
+        """
+        Группирует логи по user-agent, считает количество для каждого user-agent.
+        """
+        ua_counts = {}
+        for log in self.logs:
+            ua = log.get("http_user_agent")
+            if ua:
+                if ua in ua_counts:
+                    ua_counts[ua] += 1
+                else:
+                    ua_counts[ua] = 1
+
+        # Сортировка по убыванию количества
+        sorted_ua = sorted(ua_counts.items(), key=lambda x: x[1], reverse=True)
+        table = []
+        for i, (ua, count) in enumerate(sorted_ua):
+            table.append([i, ua, count])
+
+        return tabulate(
+            table,
+            headers=["№", "User-Agent", "Count"],
+            tablefmt="grid",
+            showindex=False,
+            stralign="left",
+            numalign="right",
+            disable_numparse=True,
         )
-        table = [[agent] for agent in agents]
-        return tabulate(table, headers=["User-Agent"], tablefmt="github")

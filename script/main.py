@@ -1,7 +1,7 @@
 from parser import parser_args
 
 from log_reader import read_logs
-from report import AverageResponseReport
+from report import AverageResponseReport, UserAgentReport
 
 
 def main():
@@ -17,6 +17,11 @@ def main():
     if args.report == "average":
         report = AverageResponseReport(all_logs)
         print(report.generate())
+    elif args.report == "useragent":
+        report = UserAgentReport(all_logs)
+        print(report.generate())
+    else:
+        raise ValueError("Unknown report type")
 
 
 if __name__ == "__main__":
